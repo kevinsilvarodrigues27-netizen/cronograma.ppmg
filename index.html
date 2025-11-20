@@ -2,241 +2,305 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Cronograma Polícia Penal MG – Completo</title>
+<title>Cronograma Polícia Penal MG – Dashboard Moderno</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* --------------------- RESET --------------------- */
-* { margin:0; padding:0; box-sizing:border-box; }
+/* Reset e fontes */
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Inter', sans-serif; }
+body { background:#f0f4f8; color:#222; padding:20px; transition: background 0.3s, color 0.3s; }
+h1,h2,h3{ color:#003366; margin-bottom:10px; }
+table{ width:100%; border-collapse: separate; border-spacing:0; margin-bottom:25px; font-size:15px; border-radius:12px; overflow:hidden; box-shadow:0 10px 20px rgba(0,0,0,0.1); background:#fff; transition: transform 0.3s, box-shadow 0.3s; }
+table:hover{ transform: translateY(-3px); box-shadow:0 15px 25px rgba(0,0,0,0.15); }
+th, td{ padding:12px 15px; text-align:left; }
+th{ background: linear-gradient(90deg, #e6f0fa, #cce0f5); color:#003366; font-weight:600; }
+td{ border-top:1px solid #ddd; }
+td.check{ cursor:pointer; font-size:20px; text-align:center; transition: transform 0.2s, color 0.3s; user-select:none; }
+td.check:hover{ transform: scale(1.4); color:#4caf50; }
 
-/* --------------------- LAYOUT --------------------- */
-body {
-    font-family: Arial, sans-serif;
-    background: #f7f9fc;
-    color: #222;
-    line-height: 1.7;
-    padding: 25px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
+/* Section title */
+.section-title{ background: linear-gradient(90deg,#cce0f5,#e6f0fa); padding:14px 20px; border-left:6px solid #003366; margin-top:40px; border-radius:8px; font-weight:600; box-shadow:0 5px 15px rgba(0,0,0,0.05); }
 
-.dark-mode { background: #1c1c1c; color: #f1f1f1; }
+/* Dashboard cards */
+#dashboard{ display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-bottom:40px; }
+.card{ background:#fff; border-radius:16px; padding:25px 20px; box-shadow:0 12px 25px rgba(0,0,0,0.12); transition: transform 0.3s, box-shadow 0.3s; position:relative; }
+.card:hover{ transform: translateY(-5px); box-shadow:0 18px 35px rgba(0,0,0,0.18); }
+.card h3{ margin-bottom:18px; font-weight:600; color:#003366; }
 
-/* --------------------- TÍTULOS --------------------- */
-h1,h2,h3 { color: #003366; margin-bottom:10px; }
-.dark-mode h1,.dark-mode h2,.dark-mode h3 { color: #7fb8ff; }
+/* Progress bars */
+.bars{ display:flex; flex-direction:column; gap:12px; }
+.bar{ height:24px; border-radius:12px; background:#e0e0e0; overflow:hidden; position:relative; }
+.bar-fill{ height:100%; width:0%; border-radius:12px; transition: width 1s ease, background 0.5s ease; }
+.bar-fill.low{ background:#ff6b6b; }
+.bar-fill.medium{ background:#ffcc00; }
+.bar-fill.high{ background:#4caf50; }
 
-/* --------------------- CONTROLES --------------------- */
-.controls { display:flex; gap:15px; margin-bottom:20px; }
-button {
-    padding:10px 18px; font-size:15px; border:none; border-radius:6px;
-    cursor:pointer; background:#003366; color:white; transition:0.2s;
-}
-button:hover { background:#0055aa; }
-.dark-mode button { background:#7fb8ff; color:#000; }
-.dark-mode button:hover { background:#a3d1ff; }
+/* Canvas gráfico */
+#progressCanvas{ width:100%; max-width:400px; height:400px; display:block; margin:0 auto; cursor:pointer; transition: transform 0.3s, box-shadow 0.3s; }
+#progressCanvas:hover{ transform: scale(1.05); box-shadow:0 15px 30px rgba(0,0,0,0.2); }
 
-/* --------------------- SEÇÕES --------------------- */
-.section-title {
-    background:#e6eef7; border-left:5px solid #003366;
-    padding:10px; margin-top:40px;
-}
-.dark-mode .section-title { background:#2b3644; border-color:#7fb8ff; }
+/* Tooltip */
+.tooltip{ position:absolute; background: rgba(0,0,0,0.85); color:#fff; padding:8px 14px; border-radius:8px; pointer-events:none; font-size:14px; display:none; z-index:10; transition: opacity 0.2s; }
 
-/* --------------------- TABELAS --------------------- */
-table {
-    width:100%; border-collapse:collapse; margin:20px 0;
-    background:white; border-radius:6px; overflow:hidden;
-}
-.dark-mode table { background:#2b2b2b; }
+/* Seletor de tema */
+#themeSelector{ margin-bottom:20px; padding:8px 12px; border-radius:8px; border:1px solid #003366; background:#fff; font-weight:500; cursor:pointer; transition: transform 0.2s, box-shadow 0.3s; }
+#themeSelector:hover{ transform: scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
 
-th {
-    background:#e0e8f2; padding:12px; color:#003366; font-weight:bold;
-    border-bottom:2px solid #c7c7c7;
-}
-.dark-mode th { background:#374557; color:#7fb8ff; border-bottom:2px solid #555; }
+/* Responsividade */
+@media(max-width:600px){ table, .card{ font-size:14px; } td.check{ font-size:18px; } }
 
-td { padding:12px; border-bottom:1px solid #c7c7c7; }
-.dark-mode td { border-color:#555; }
+/* Temas aprimorados */
+.theme-blue{ --main:#003366; --accent:#1e90ff; --bg:#f0f4f8; --text:#222; --card:#fff; }
+.theme-red{ --main:#8b0000; --accent:#ff4500; --bg:#fff0f0; --text:#222; --card:#fff; }
+.theme-green{ --main:#006400; --accent:#32cd32; --bg:#f0fff0; --text:#222; --card:#fff; }
+.theme-purple{ --main:#4b0082; --accent:#9370db; --bg:#f8f0ff; --text:#222; --card:#fff; }
+.theme-dark{ --main:#1e1e1e; --accent:#00bfff; --bg:#121212; --text:#eee; --card:#1c1c1c; }
 
-/* --------------------- CHECKBOX --------------------- */
-input[type="checkbox"] {
-    width:22px; height:22px; cursor:pointer; accent-color:#003366;
-    transition:transform 0.2s ease;
-}
-input[type="checkbox"]:hover { transform:scale(1.25); }
-.dark-mode input[type="checkbox"] { accent-color:#7fb8ff; }
-td input[type="checkbox"] { margin:auto; display:block; }
-
-/* --------------------- PROGRESSO --------------------- */
-.progress-container { background:#ddd; border-radius:10px; overflow:hidden; height:18px; margin-top:10px; margin-bottom:10px; }
-.progress-bar { height:100%; width:0; background:#003366; transition:width 0.3s ease; }
-.dark-mode .progress-bar { background:#7fb8ff; }
-
-/* --------------------- RESPONSIVIDADE --------------------- */
-@media(max-width:650px) {
-    body { padding:10px; }
-    table { font-size:13px; }
-    button { padding:8px 12px; font-size:13px; }
-}
+/* Aplicando cores das variáveis */
+body{ background:var(--bg); color:var(--text); }
+.card, table{ background:var(--card); color:var(--text); border-color:var(--accent); }
+.bar-fill{ background:var(--accent); }
+.section-title{ border-left-color:var(--main); }
 </style>
 </head>
-<body>
+<body class="theme-blue">
 
-<!-- CONTROLES GERAIS -->
-<div class="controls">
-    <button onclick="marcarTudoGlobal()">Marcar tudo</button>
-    <button onclick="limparTudoGlobal()">Limpar tudo</button>
-    <button onclick="toggleDarkMode()">Modo escuro</button>
+<h1>📘 Cronograma Polícia Penal MG – Dashboard Moderno</h1>
+
+<label for="themeSelector">Escolha um tema:</label>
+<select id="themeSelector">
+<option value="theme-blue">Azul</option>
+<option value="theme-red">Vermelho</option>
+<option value="theme-green">Verde</option>
+<option value="theme-purple">Roxo</option>
+<option value="theme-dark">Dark</option>
+</select>
+
+<!-- Dashboard -->
+<div id="dashboard">
+<div class="card">
+<h3>Progresso Total</h3>
+<canvas id="progressCanvas"></canvas>
+</div>
+<div class="card">
+<h3>Meta Diária</h3>
+<p id="dailyMeta">Calculando...</p>
+</div>
+<div class="card">
+<h3>Meta Semanal</h3>
+<p id="weeklyMeta">Calculando...</p>
+</div>
+<div class="card">
+<h3>Meta Geral</h3>
+<p id="totalMeta">Calculando...</p>
+</div>
+<div class="card">
+<h3>Progresso Semanas</h3>
+<div class="bars" id="weekBars"></div>
+</div>
 </div>
 
-<h1>📘 Cronograma de Estudos – Polícia Penal MG</h1>
-<p><strong>Duração:</strong> 6 semanas<br>
-<strong>Carga diária:</strong> 2 horas (19h–21h)<br>
-<strong>Foco:</strong> Conteúdos mais cobrados</p>
+<!-- Cronograma -->
+<div id="cronograma"></div>
 
-<hr>
-
-<!-- ==================== SEMANAS ==================== -->
-<div id="semanas"></div>
-
-<hr>
-
-<!-- ==================== CHECKLIST GERAL ==================== -->
+<!-- Checklist Geral Completo -->
 <h2 class="section-title">Checklist Geral</h2>
-<div id="checklistGeral">
-    <p>
-        Legislação Especial: 
-        <input type="checkbox" data-check="LEP"> LEP 
-        <input type="checkbox" data-check="Drogas"> Drogas 
-        <input type="checkbox" data-check="Hediondos"> Hediondos 
-        <input type="checkbox" data-check="Tortura"> Tortura 
-        <input type="checkbox" data-check="Desarmamento"> Desarmamento 
-        <input type="checkbox" data-check="MariaPenha"> Maria da Penha 
-        <input type="checkbox" data-check="LeisMG"> Leis MG
-    </p>
-    <p>
-        Direitos Humanos: 
-        <input type="checkbox" data-check="Conceitos"> Conceitos 
-        <input type="checkbox" data-check="Tratados"> Tratados 
-        <input type="checkbox" data-check="Hierarquia"> Hierarquia
-    </p>
-    <p>
-        Constitucional: 
-        <input type="checkbox" data-check="TituloI"> Título I 
-        <input type="checkbox" data-check="TituloII"> Título II 
-        <input type="checkbox" data-check="Art37"> Art. 37 
-        <input type="checkbox" data-check="Art144"> Art. 144
-    </p>
-    <p>
-        Penal: 
-        <input type="checkbox" data-check="ConceitosPenal"> Conceitos 
-        <input type="checkbox" data-check="Excludentes"> Excludentes 
-        <input type="checkbox" data-check="PenasPenal"> Penas
-    </p>
-    <p>
-        Português: 
-        <input type="checkbox" data-check="Interpretacao"> Interpretação 
-        <input type="checkbox" data-check="Gramatica"> Gramática
-    </p>
-    <p>
-        Informática: 
-        <input type="checkbox" data-check="Basico"> Básico 
-        <input type="checkbox" data-check="Navegadores"> Navegadores 
-        <input type="checkbox" data-check="Seguranca"> Segurança
-    </p>
-    <p>
-        Lógico: 
-        <input type="checkbox" data-check="Proposicoes"> Proposições 
-        <input type="checkbox" data-check="Tabelas"> Tabelas 
-        <input type="checkbox" data-check="Equivalencias"> Equivalências 
-        <input type="checkbox" data-check="Conjuntos"> Conjuntos
-    </p>
-</div>
-
-<hr>
-<p style="text-align:center; margin-top:40px; font-size:14px;">
-<strong>CRONOGRAMA DE ESTUDOS PPMG-BY KEVIN</strong>
+<p id="checklist">
+<input type="checkbox" class="general-check"> LEP &nbsp;
+<input type="checkbox" class="general-check"> Drogas &nbsp;
+<input type="checkbox" class="general-check"> Hediondos &nbsp;
+<input type="checkbox" class="general-check"> Tortura &nbsp;
+<input type="checkbox" class="general-check"> Desarmamento &nbsp;
+<input type="checkbox" class="general-check"> Maria da Penha &nbsp;
+<input type="checkbox" class="general-check"> Leis MG &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Direitos Humanos – Conceitos &nbsp;
+<input type="checkbox" class="general-check"> Direitos Humanos – Tratados &nbsp;
+<input type="checkbox" class="general-check"> Direitos Humanos – Hierarquia &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Constitucional – Título I &nbsp;
+<input type="checkbox" class="general-check"> Constitucional – Título II &nbsp;
+<input type="checkbox" class="general-check"> Constitucional – Art. 37 &nbsp;
+<input type="checkbox" class="general-check"> Constitucional – Art. 144 &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Penal – Conceitos &nbsp;
+<input type="checkbox" class="general-check"> Penal – Excludentes &nbsp;
+<input type="checkbox" class="general-check"> Penal – Penas &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Português – Interpretação &nbsp;
+<input type="checkbox" class="general-check"> Português – Gramática &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Informática – Básico &nbsp;
+<input type="checkbox" class="general-check"> Informática – Navegadores &nbsp;
+<input type="checkbox" class="general-check"> Informática – Segurança &nbsp;
+<br>
+<input type="checkbox" class="general-check"> Lógico – Proposições &nbsp;
+<input type="checkbox" class="general-check"> Lógico – Tabelas &nbsp;
+<input type="checkbox" class="general-check"> Lógico – Equivalências &nbsp;
+<input type="checkbox" class="general-check"> Lógico – Conjuntos &nbsp;
 </p>
 
+<div class="tooltip" id="tooltip"></div>
+
 <script>
-// --------------------- DADOS DO CRONOGRAMA ---------------------
-const cronograma = [
-    {titulo:"SEMANA 1 – LEP + Português", atividades:["LEP – Princípios, direitos, deveres","LEP – Classificação, estabelecimentos","LEP – Regime disciplinar, faltas, sanções","LEP – Administração, conselho, patronato","Português – Interpretação","Português – Gramática essencial","Revisão + Simulado"]},
-    {titulo:"SEMANA 2 – Leis Especiais", atividades:["Lei 11.343/06 – Drogas","Lei 8.072/90 – Hediondos","Lei 10.826/03 – Desarmamento","Lei 9.455/97 – Tortura","Lei 11.340/06 – Maria da Penha","Leis Estaduais de MG – Sistema Prisional","Revisão + Simulado"]},
-    {titulo:"SEMANA 3 – Direitos Humanos + Constitucional", atividades:["DH – Conceitos","DH – Sistemas e tratados","CF – Direitos Fundamentais","CF – Administração Pública","CF – Segurança Pública","Revisão geral","Simulado"]},
-    {titulo:"SEMANA 4 – Penal + Informática", atividades:["DP – Conceitos fundamentais","DP – Excludentes","DP – Penas e concurso","Informática – Conceitos básicos","Windows, arquivos, navegadores","Segurança digital","Simulado parcial"]},
-    {titulo:"SEMANA 5 – Raciocínio Lógico + Revisões", atividades:["Proposições e conectivos","Tabelas-verdade","Equivalências lógicas","Conjuntos e diagramas","Problemas matemáticos","Revisão LEP + Drogas","Simulado geral"]},
-    {titulo:"SEMANA 6 – Revisão Final + Simulados", atividades:["Revisão – Legislação Especial","Revisão – Legislação (parte 2)","Revisão – DH + Constitucional","Revisão – Português","Revisão – Lógico + Informática","Simulado completo (60 questões)","Correção detalhada"]}
+// Tema dinâmico
+const themeSelector=document.getElementById('themeSelector');
+themeSelector.addEventListener('change',e=>{document.body.className=e.target.value;});
+
+// Cronograma 6 semanas
+const semanas=[
+["LEP – Princípios, direitos, deveres","LEP – Classificação, estabelecimentos","LEP – Regime disciplinar, faltas, sanções","LEP – Administração, conselho, patronato","Português – Interpretação","Português – Gramática essencial","Revisão + Simulado"],
+["Lei 11.343/06 – Drogas","Lei 8.072/90 – Hediondos","Lei 10.826/03 – Desarmamento","Lei 9.455/97 – Tortura","Lei 11.340/06 – Maria da Penha","Leis Estaduais de MG – Sistema Prisional","Revisão + Simulado"],
+["DH – Conceitos","DH – Sistemas e tratados","CF – Direitos Fundamentais","CF – Administração Pública","CF – Segurança Pública","Revisão geral","Simulado"],
+["DP – Conceitos fundamentais","DP – Excludentes","DP – Penas e concurso","Informática – Conceitos básicos","Windows, arquivos, navegadores","Segurança digital","Simulado parcial"],
+["Proposições e conectivos","Tabelas-verdade","Equivalências lógicas","Conjuntos e diagramas","Problemas matemáticos","Revisão LEP + Drogas","Simulado geral"],
+["Revisão – Legislação Especial","Revisão – Legislação (parte 2)","Revisão – DH + Constitucional","Revisão – Português","Revisão – Lógico + Informática","Simulado completo (60 questões)","Correção detalhada"]
 ];
-
-// --------------------- RENDER SEMANAS ---------------------
-const container = document.getElementById("semanas");
-cronograma.forEach((semana,sIndex)=>{
-    const div = document.createElement("div");
-    div.innerHTML = `
-        <h2 class="section-title">${semana.titulo}</h2>
-        <div class="controls" style="margin-bottom:5px;">
-            <button onclick="marcarTudoSemana(${sIndex})">Marcar tudo</button>
-            <button onclick="limparTudoSemana(${sIndex})">Limpar tudo</button>
-        </div>
-        <div class="progress-container"><div class="progress-bar" id="progress${sIndex}"></div></div>
-        <table>
-            <tr><th>Dia</th><th>Conteúdo</th><th>Horário</th><th>Feito</th></tr>
-            ${semana.atividades.map((a,aIndex)=>`<tr>
-                <td>${aIndex+1}</td><td>${a}</td><td>19h–21h</td>
-                <td><input type="checkbox" class="semana${sIndex}" data-id="${aIndex}"></td>
-            </tr>`).join('')}
-        </table>
-    `;
-    container.appendChild(div);
-});
-
-// --------------------- CHECKBOXES SEMANAS ---------------------
-const totalSemanas = cronograma.length;
-for(let s=0;s<totalSemanas;s++){
-    const checkboxes=document.querySelectorAll(`.semana${s}`);
-    checkboxes.forEach((box,i)=>{
-        const key=`sem${s}check${i}`;
-        if(localStorage.getItem(key)==="true") box.checked=true;
-        box.addEventListener("change",()=>{ localStorage.setItem(key,box.checked); atualizarProgresso(s); });
+const cronogramaDiv=document.getElementById('cronograma');
+semanas.forEach((semana,i)=>{
+    let h2=document.createElement('h2');
+    h2.className="section-title";
+    h2.textContent=`SEMANA ${i+1}`;
+    cronogramaDiv.appendChild(h2);
+    let table=document.createElement('table');
+    let header=document.createElement('tr');
+    header.innerHTML="<th>Dia</th><th>Conteúdo</th><th>Horário</th><th>Feito</th>";
+    table.appendChild(header);
+    semana.forEach((atividade,j)=>{
+        let tr=document.createElement('tr');
+        tr.innerHTML=`<td>${j+1}</td><td>${atividade}</td><td>19h–21h</td><td class="check">☐</td>`;
+        table.appendChild(tr);
     });
-    atualizarProgresso(s);
-}
-
-// --------------------- FUNÇÕES DE PROGRESSO ---------------------
-function atualizarProgresso(s){
-    const checkboxes=document.querySelectorAll(`.semana${s}`);
-    const total=checkboxes.length;
-    const marcados=Array.from(checkboxes).filter(c=>c.checked).length;
-    document.getElementById(`progress${s}`).style.width=`${(marcados/total)*100}%`;
-}
-
-// --------------------- FUNÇÕES SEMANA ---------------------
-function marcarTudoSemana(s){
-    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=true; localStorage.setItem(`sem${s}check${i}`,true); });
-    atualizarProgresso(s);
-}
-function limparTudoSemana(s){
-    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=false; localStorage.setItem(`sem${s}check${i}`,false); });
-    atualizarProgresso(s);
-}
-
-// --------------------- BOTÕES GLOBAIS ---------------------
-function marcarTudoGlobal(){ for(let s=0;s<totalSemanas;s++) marcarTudoSemana(s); }
-function limparTudoGlobal(){ for(let s=0;s<totalSemanas;s++) limparTudoSemana(s); }
-
-// --------------------- MODO ESCURO ---------------------
-function toggleDarkMode(){
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkmode",document.body.classList.contains("dark-mode"));
-}
-if(localStorage.getItem("darkmode")==="true") document.body.classList.add("dark-mode");
-
-// --------------------- CHECKLIST GERAL ---------------------
-document.querySelectorAll('#checklistGeral input[type="checkbox"]').forEach(chk=>{
-    const key=`checklist_${chk.dataset.check}`;
-    if(localStorage.getItem(key)==="true") chk.checked=true;
-    chk.addEventListener("change",()=>{ localStorage.setItem(key,chk.checked); });
+    cronogramaDiv.appendChild(table);
 });
-</script>
 
+// Checkmarks interativos
+function initChecks(){
+    const checks=document.querySelectorAll('.check');
+    checks.forEach(el=>{
+        el.addEventListener('click',()=>{
+            el.textContent=(el.textContent==='☐')?'✅':'☐';
+            saveProgress(); updateDashboard();
+        });
+    });
+    return checks;
+}
+let checks=initChecks();
+
+// LocalStorage
+function saveProgress(){
+    const states=Array.from(checks).map(c=>c.textContent);
+    localStorage.setItem('progress',JSON.stringify(states));
+}
+function loadProgress(){
+    const saved=JSON.parse(localStorage.getItem('progress')||'[]');
+    saved.forEach((val,i)=>{ if(checks[i]) checks[i].textContent=val; });
+}
+loadProgress();
+
+// Metas automáticas
+function calculateMeta(){
+    const totalTasks=checks.length;
+    const doneTasks=Array.from(checks).filter(c=>c.textContent==='✅').length;
+    const remaining=totalTasks-doneTasks;
+    const daily=Math.ceil(remaining/6);
+    const weekly=Math.ceil(remaining/1);
+    return {daily, weekly, total:totalTasks, done:doneTasks, remaining};
+}
+
+// Dashboard barras semanais
+function renderWeekBars(){
+    const barsContainer=document.getElementById('weekBars');
+    barsContainer.innerHTML='';
+    for(let i=0;i<6;i++){
+        const div=document.createElement('div');
+        div.className='bar';
+        const fill=document.createElement('div');
+        fill.className='bar-fill';
+        const doneWeek=checks.slice(i*7,(i+1)*7).filter(c=>c.textContent==='✅').length;
+        fill.style.width=((doneWeek/7)*100)+'%';
+        if(doneWeek/7<0.4) fill.className+=' low';
+        else if(doneWeek/7<0.8) fill.className+=' medium';
+        else fill.className+=' high';
+        fill.title=`Semana ${i+1}: ${doneWeek}/7 concluídas`;
+        div.appendChild(fill);
+        barsContainer.appendChild(div);
+    }
+}
+
+// Gráfico duplo com tooltip
+const canvas=document.getElementById('progressCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=canvas.height=400;
+const tooltip=document.getElementById('tooltip');
+
+canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const meta=calculateMeta();
+    const centerX=canvas.width/2;
+    const centerY=canvas.height/2;
+    const dx=x-centerX;
+    const dy=y-centerY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist>100 && dist<150){
+        tooltip.style.display='block';
+        tooltip.textContent=`Total concluído: ${meta.done}/${meta.total}`;
+        tooltip.style.left=e.pageX+10+'px';
+        tooltip.style.top=e.pageY+10+'px';
+    } else if(dist<=100){
+        tooltip.style.display='block';
+        tooltip.textContent=`Meta diária: ${meta.daily} tarefas`;
+        tooltip.style.left=e.pageX+10+'px';
+        tooltip.style.top=e.pageY+10+'px';
+    } else tooltip.style.display='none';
+});
+
+function drawChart(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const meta=calculateMeta();
+    const centerX=canvas.width/2;
+    const centerY=canvas.height/2;
+    const radiusOuter=150;
+    const radiusInner=100;
+
+    // Anel externo - progresso total
+    const angleTotal=2*Math.PI*(meta.done/meta.total);
+    ctx.beginPath();
+    ctx.arc(centerX,centerY,radiusOuter,-Math.PI/2,-Math.PI/2+angleTotal);
+    ctx.strokeStyle='var(--accent)';
+    ctx.lineWidth=25;
+    ctx.lineCap='round';
+    ctx.stroke();
+
+    // Anel interno - meta diária
+    const angleDaily=2*Math.PI*(meta.daily/meta.total);
+    ctx.beginPath();
+    ctx.arc(centerX,centerY,radiusInner,-Math.PI/2,-Math.PI/2+angleDaily);
+    ctx.strokeStyle='var(--main)';
+    ctx.lineWidth=25;
+    ctx.lineCap='round';
+    ctx.stroke();
+
+    // Texto central
+    ctx.font='20px Inter';
+    ctx.fillStyle='var(--text)';
+    ctx.textAlign='center';
+    ctx.fillText(`Feito: ${meta.done}/${meta.total}`,centerX,centerY-10);
+    ctx.fillText(`Meta diária: ${meta.daily}`,centerX,centerY+20);
+}
+
+// Atualizar dashboard
+function updateDashboard(){
+    const meta=calculateMeta();
+    document.getElementById('dailyMeta').textContent=`${meta.daily} tarefas/dia`;
+    document.getElementById('weeklyMeta').textContent=`${meta.weekly} tarefas/semana`;
+    document.getElementById('totalMeta').textContent=`${meta.total} tarefas no total`;
+    drawChart();
+    renderWeekBars();
+}
+updateDashboard();
+</script>
 </body>
 </html>
+
