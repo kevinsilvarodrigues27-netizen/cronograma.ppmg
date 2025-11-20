@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Cronograma Polícia Penal MG – Completo</title>
+<style>
+/* --------------------- RESET --------------------- */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* --------------------- LAYOUT --------------------- */
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fc;
+    color: #222;
+    line-height: 1.7;
+    padding: 25px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode { background: #1c1c1c; color: #f1f1f1; }
+
+/* --------------------- TÍTULOS --------------------- */
+h1,h2,h3 { color: #003366; margin-bottom:10px; }
+.dark-mode h1,.dark-mode h2,.dark-mode h3 { color: #7fb8ff; }
+
+/* --------------------- CONTROLES --------------------- */
+.controls { display:flex; gap:15px; margin-bottom:20px; }
+button {
+    padding:10px 18px; font-size:15px; border:none; border-radius:6px;
+    cursor:pointer; background:#003366; color:white; transition:0.2s;
+}
+button:hover { background:#0055aa; }
+.dark-mode button { background:#7fb8ff; color:#000; }
+.dark-mode button:hover { background:#a3d1ff; }
+
+/* --------------------- SEÇÕES --------------------- */
+.section-title {
+    background:#e6eef7; border-left:5px solid #003366;
+    padding:10px; margin-top:40px;
+}
+.dark-mode .section-title { background:#2b3644; border-color:#7fb8ff; }
+
+/* --------------------- TABELAS --------------------- */
+table {
+    width:100%; border-collapse:collapse; margin:20px 0;
+    background:white; border-radius:6px; overflow:hidden;
+}
+.dark-mode table { background:#2b2b2b; }
+
+th {
+    background:#e0e8f2; padding:12px; color:#003366; font-weight:bold;
+    border-bottom:2px solid #c7c7c7;
+}
+.dark-mode th { background:#374557; color:#7fb8ff; border-bottom:2px solid #555; }
+
+td { padding:12px; border-bottom:1px solid #c7c7c7; }
+.dark-mode td { border-color:#555; }
+
+/* --------------------- CHECKBOX --------------------- */
+input[type="checkbox"] {
+    width:22px; height:22px; cursor:pointer; accent-color:#003366;
+    transition:transform 0.2s ease;
+}
+input[type="checkbox"]:hover { transform:scale(1.25); }
+.dark-mode input[type="checkbox"] { accent-color:#7fb8ff; }
+td input[type="checkbox"] { margin:auto; display:block; }
+
+/* --------------------- PROGRESSO --------------------- */
+.progress-container { background:#ddd; border-radius:10px; overflow:hidden; height:18px; margin-top:10px; margin-bottom:10px; }
+.progress-bar { height:100%; width:0; background:#003366; transition:width 0.3s ease; }
+.dark-mode .progress-bar { background:#7fb8ff; }
+
+/* --------------------- RESPONSIVIDADE --------------------- */
+@media(max-width:650px) {
+    body { padding:10px; }
+    table { font-size:13px; }
+    button { padding:8px 12px; font-size:13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CONTROLES GERAIS -->
+<div class="controls">
+    <button onclick="marcarTudoGlobal()">Marcar tudo</button>
+    <button onclick="limparTudoGlobal()">Limpar tudo</button>
+    <button onclick="toggleDarkMode()">Modo escuro</button>
+</div>
+
+<h1>📘 Cronograma de Estudos – Polícia Penal MG</h1>
+<p><strong>Duração:</strong> 6 semanas<br>
+<strong>Carga diária:</strong> 2 horas (19h–21h)<br>
+<strong>Foco:</strong> Conteúdos mais cobrados</p>
+
+<hr>
+
+<!-- ==================== SEMANAS ==================== -->
+<div id="semanas"></div>
+
+<hr>
+
+<!-- ==================== CHECKLIST GERAL ==================== -->
+<h2 class="section-title">Checklist Geral</h2>
+<div id="checklistGeral">
+    <p>
+        Legislação Especial: 
+        <input type="checkbox" data-check="LEP"> LEP 
+        <input type="checkbox" data-check="Drogas"> Drogas 
+        <input type="checkbox" data-check="Hediondos"> Hediondos 
+        <input type="checkbox" data-check="Tortura"> Tortura 
+        <input type="checkbox" data-check="Desarmamento"> Desarmamento 
+        <input type="checkbox" data-check="MariaPenha"> Maria da Penha 
+        <input type="checkbox" data-check="LeisMG"> Leis MG
+    </p>
+    <p>
+        Direitos Humanos: 
+        <input type="checkbox" data-check="Conceitos"> Conceitos 
+        <input type="checkbox" data-check="Tratados"> Tratados 
+        <input type="checkbox" data-check="Hierarquia"> Hierarquia
+    </p>
+    <p>
+        Constitucional: 
+        <input type="checkbox" data-check="TituloI"> Título I 
+        <input type="checkbox" data-check="TituloII"> Título II 
+        <input type="checkbox" data-check="Art37"> Art. 37 
+        <input type="checkbox" data-check="Art144"> Art. 144
+    </p>
+    <p>
+        Penal: 
+        <input type="checkbox" data-check="ConceitosPenal"> Conceitos 
+        <input type="checkbox" data-check="Excludentes"> Excludentes 
+        <input type="checkbox" data-check="PenasPenal"> Penas
+    </p>
+    <p>
+        Português: 
+        <input type="checkbox" data-check="Interpretacao"> Interpretação 
+        <input type="checkbox" data-check="Gramatica"> Gramática
+    </p>
+    <p>
+        Informática: 
+        <input type="checkbox" data-check="Basico"> Básico 
+        <input type="checkbox" data-check="Navegadores"> Navegadores 
+        <input type="checkbox" data-check="Seguranca"> Segurança
+    </p>
+    <p>
+        Lógico: 
+        <input type="checkbox" data-check="Proposicoes"> Proposições 
+        <input type="checkbox" data-check="Tabelas"> Tabelas 
+        <input type="checkbox" data-check="Equivalencias"> Equivalências 
+        <input type="checkbox" data-check="Conjuntos"> Conjuntos
+    </p>
+</div>
+
+<hr>
+<p style="text-align:center; margin-top:40px; font-size:14px;">
+<strong>Versão interativa – Gerado por ChatGPT</strong>
+</p>
+
+<script>
+// --------------------- DADOS DO CRONOGRAMA ---------------------
+const cronograma = [
+    {titulo:"SEMANA 1 – LEP + Português", atividades:["LEP – Princípios, direitos, deveres","LEP – Classificação, estabelecimentos","LEP – Regime disciplinar, faltas, sanções","LEP – Administração, conselho, patronato","Português – Interpretação","Português – Gramática essencial","Revisão + Simulado"]},
+    {titulo:"SEMANA 2 – Leis Especiais", atividades:["Lei 11.343/06 – Drogas","Lei 8.072/90 – Hediondos","Lei 10.826/03 – Desarmamento","Lei 9.455/97 – Tortura","Lei 11.340/06 – Maria da Penha","Leis Estaduais de MG – Sistema Prisional","Revisão + Simulado"]},
+    {titulo:"SEMANA 3 – Direitos Humanos + Constitucional", atividades:["DH – Conceitos","DH – Sistemas e tratados","CF – Direitos Fundamentais","CF – Administração Pública","CF – Segurança Pública","Revisão geral","Simulado"]},
+    {titulo:"SEMANA 4 – Penal + Informática", atividades:["DP – Conceitos fundamentais","DP – Excludentes","DP – Penas e concurso","Informática – Conceitos básicos","Windows, arquivos, navegadores","Segurança digital","Simulado parcial"]},
+    {titulo:"SEMANA 5 – Raciocínio Lógico + Revisões", atividades:["Proposições e conectivos","Tabelas-verdade","Equivalências lógicas","Conjuntos e diagramas","Problemas matemáticos","Revisão LEP + Drogas","Simulado geral"]},
+    {titulo:"SEMANA 6 – Revisão Final + Simulados", atividades:["Revisão – Legislação Especial","Revisão – Legislação (parte 2)","Revisão – DH + Constitucional","Revisão – Português","Revisão – Lógico + Informática","Simulado completo (60 questões)","Correção detalhada"]}
+];
+
+// --------------------- RENDER SEMANAS ---------------------
+const container = document.getElementById("semanas");
+cronograma.forEach((semana,sIndex)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `
+        <h2 class="section-title">${semana.titulo}</h2>
+        <div class="controls" style="margin-bottom:5px;">
+            <button onclick="marcarTudoSemana(${sIndex})">Marcar tudo</button>
+            <button onclick="limparTudoSemana(${sIndex})">Limpar tudo</button>
+        </div>
+        <div class="progress-container"><div class="progress-bar" id="progress${sIndex}"></div></div>
+        <table>
+            <tr><th>Dia</th><th>Conteúdo</th><th>Horário</th><th>Feito</th></tr>
+            ${semana.atividades.map((a,aIndex)=>`<tr>
+                <td>${aIndex+1}</td><td>${a}</td><td>19h–21h</td>
+                <td><input type="checkbox" class="semana${sIndex}" data-id="${aIndex}"></td>
+            </tr>`).join('')}
+        </table>
+    `;
+    container.appendChild(div);
+});
+
+// --------------------- CHECKBOXES SEMANAS ---------------------
+const totalSemanas = cronograma.length;
+for(let s=0;s<totalSemanas;s++){
+    const checkboxes=document.querySelectorAll(`.semana${s}`);
+    checkboxes.forEach((box,i)=>{
+        const key=`sem${s}check${i}`;
+        if(localStorage.getItem(key)==="true") box.checked=true;
+        box.addEventListener("change",()=>{ localStorage.setItem(key,box.checked); atualizarProgresso(s); });
+    });
+    atualizarProgresso(s);
+}
+
+// --------------------- FUNÇÕES DE PROGRESSO ---------------------
+function atualizarProgresso(s){
+    const checkboxes=document.querySelectorAll(`.semana${s}`);
+    const total=checkboxes.length;
+    const marcados=Array.from(checkboxes).filter(c=>c.checked).length;
+    document.getElementById(`progress${s}`).style.width=`${(marcados/total)*100}%`;
+}
+
+// --------------------- FUNÇÕES SEMANA ---------------------
+function marcarTudoSemana(s){
+    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=true; localStorage.setItem(`sem${s}check${i}`,true); });
+    atualizarProgresso(s);
+}
+function limparTudoSemana(s){
+    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=false; localStorage.setItem(`sem${s}check${i}`,false); });
+    atualizarProgresso(s);
+}
+
+// --------------------- BOTÕES GLOBAIS ---------------------
+function marcarTudoGlobal(){ for(let s=0;s<totalSemanas;s++) marcarTudoSemana(s); }
+function limparTudoGlobal(){ for(let s=0;s<totalSemanas;s++) limparTudoSemana(s); }
+
+// --------------------- MODO ESCURO ---------------------
+function toggleDarkMode(){
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkmode",document.body.classList.contains("dark-mode"));
+}
+if(localStorage.getItem("darkmode")==="true") document.body.classList.add("dark-mode");
+
+// --------------------- CHECKLIST GERAL ---------------------
+document.querySelectorAll('#checklistGeral input[type="checkbox"]').forEach(chk=>{
+    const key=`checklist_${chk.dataset.check}`;
+    if(localStorage.getItem(key)==="true") chk.checked=true;
+    chk.addEventListener("change",()=>{ localStorage.setItem(key,chk.checked); });
+});
+</script>
+
+</body>
+</html>
