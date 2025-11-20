@@ -151,7 +151,10 @@ td input[type="checkbox"] { margin:auto; display:block; }
     </p>
 </div>
 
-
+<hr>
+<p style="text-align:center; margin-top:40px; font-size:14px;">
+<strong>CRONOGRAMA DE ESTUDOS PPMG-BY KEVIN</strong>
+</p>
 
 <script>
 // --------------------- DADOS DO CRONOGRAMA ---------------------
@@ -212,13 +215,13 @@ function marcarTudoSemana(s){
     atualizarProgresso(s);
 }
 function limparTudoSemana(s){
-tion marcarTudoGlobal(){ for(let s=0;s<totalSemanas;s++) marcarTudoSemana(s); }
-funct    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=false; localStorage.setItem(`sem${s}check${i}`,false); });
+    document.querySelectorAll(`.semana${s}`).forEach((c,i)=>{ c.checked=false; localStorage.setItem(`sem${s}check${i}`,false); });
     atualizarProgresso(s);
 }
 
 // --------------------- BOTÕES GLOBAIS ---------------------
-funcion limparTudoGlobal(){ for(let s=0;s<totalSemanas;s++) limparTudoSemana(s); }
+function marcarTudoGlobal(){ for(let s=0;s<totalSemanas;s++) marcarTudoSemana(s); }
+function limparTudoGlobal(){ for(let s=0;s<totalSemanas;s++) limparTudoSemana(s); }
 
 // --------------------- MODO ESCURO ---------------------
 function toggleDarkMode(){
